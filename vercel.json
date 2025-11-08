@@ -1,5 +1,5 @@
 {
   "installCommand": "pnpm install",
-  "buildCommand": "pnpm -w run build:webapp",
+  "buildCommand": "CI='' pnpm run build:webapp",
   "outputDirectory": "packages/webapp/build"
 }
