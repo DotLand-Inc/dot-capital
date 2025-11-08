@@ -1,6 +1,5 @@
 {
   "installCommand": "pnpm install",
   "buildCommand": "pnpm -w run build:webapp",
-  "outputDirectory": "packages/webapp/build",
-  "rootDirectory": "."
+  "outputDirectory": "packages/webapp/build"
 }
