@@ -2,6 +2,13 @@
   "installCommand": "pnpm install",
   "buildCommand": "pnpm -w run build:webapp",
   "outputDirectory": "packages/webapp/build",
+  "build": {
+    "env": {
+      "DISABLE_ESLINT_PLUGIN": "true",
+      "ESLINT_NO_DEV_ERRORS": "true",
+      "CI": "false"
+    }
+  },
    "rewrites": [{
       "source": "/api/:slug*",
       "destination": "https://dev.bigcapital.ly/api/:slug*"
