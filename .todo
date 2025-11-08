@@ -1,5 +1,6 @@
 - Common:
   - build docker image in docker folder in ci
+  - Fix versel image build
   - create a dev environment - dev container
   - test the application locally in dev container
   - deploy the app in production mode
