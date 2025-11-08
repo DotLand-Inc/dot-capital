@@ -1,0 +1,9 @@
+- Common:
+  - build docker image in docker folder in ci
+  - create a dev environment - dev container
+  - test the application locally in dev container
+  - deploy the app in production mode
+- Backend:
+  - Fix lint
+- Frontend:
+  - Fix lint

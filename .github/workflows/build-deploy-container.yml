@@ -6,8 +6,14 @@ on:
   workflow_dispatch:
 
 env:
+  # Application images
   WEBAPP_IMAGE_NAME: hsaii/webapp
   SERVER_IMAGE_NAME: hsaii/server
+  # Infrastructure images
+  MARIADB_IMAGE_NAME: hsaii/mariadb
+  REDIS_IMAGE_NAME: hsaii/redis
+  MIGRATION_IMAGE_NAME: hsaii/migration
+  MONGO_IMAGE_NAME: hsaii/mongo
 
 jobs:
   build-publish-webapp:
@@ -111,6 +117,195 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: digests-server
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build-publish-mariadb:
+    name: Build and deploy mariadb container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.MARIADB_IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        id: build
+        with:
+          context: ./docker/mariadb
+          file: ./docker/mariadb/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.MARIADB_IMAGE_NAME }}:latest, ${{ env.MARIADB_IMAGE_NAME }}:${{github.ref_name}}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-mariadb
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build-publish-redis:
+    name: Build and deploy redis container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REDIS_IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        id: build
+        with:
+          context: ./docker/redis
+          file: ./docker/redis/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.REDIS_IMAGE_NAME }}:latest, ${{ env.REDIS_IMAGE_NAME }}:${{github.ref_name}}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-redis
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build-publish-migration:
+    name: Build and deploy migration container
+    runs-on: ubuntu-latest
+    needs: [build-publish-server]  # Migration depends on server image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.MIGRATION_IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        id: build
+        with:
+          context: ./docker/migration
+          file: ./docker/migration/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.MIGRATION_IMAGE_NAME }}:latest, ${{ env.MIGRATION_IMAGE_NAME }}:${{github.ref_name}}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-migration
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  build-publish-mongo:
+    name: Build and deploy mongo container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.MONGO_IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        id: build
+        with:
+          context: ./docker/mongo
+          file: ./docker/mongo/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.MONGO_IMAGE_NAME }}:latest, ${{ env.MONGO_IMAGE_NAME }}:${{github.ref_name}}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-mongo
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
