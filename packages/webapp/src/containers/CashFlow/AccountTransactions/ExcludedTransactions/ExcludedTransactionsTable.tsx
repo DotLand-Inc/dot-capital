@@ -24,7 +24,7 @@ import {
   withBankingActions,
 } from '../../withBankingActions';
 
-interface ExcludeTransactionsTableProps extends WithBankingActionsProps {}
+interface ExcludeTransactionsTableProps extends WithBankingActionsProps { }
 
 /**
  * Renders the recognized account transactions datatable.
@@ -51,7 +51,7 @@ function ExcludedTransactionsTableRoot({
     useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_ACCOUNT_TRANSACTIONS);
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {};
+  const handleCellClick = (cell, event) => { };
 
   // Handle restore button click.
   const handleRestoreClick = (transaction) => {
@@ -95,7 +95,6 @@ function ExcludedTransactionsTableRoot({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={'small' == 'small' ? 32 : 40}
       vListrowHeight={40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
