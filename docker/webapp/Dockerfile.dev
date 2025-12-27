@@ -1,0 +1,19 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache python3 make g++
+
+# Copy source
+COPY . .
+
+# Install pnpm
+RUN npm install -g pnpm@9
+RUN rm -f pnpm-lock.yaml
+
+# Expose port
+EXPOSE 4000
+
+# Run install and dev app at runtime
+CMD ["sh", "-c", "pnpm install --no-frozen-lockfile && pnpm run dev:webapp"]

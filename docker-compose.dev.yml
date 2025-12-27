@@ -1,0 +1,58 @@
+version: '3.3'
+
+services:
+  mariadb:
+    image: mariadb:10.2
+    network_mode: "host"
+    environment:
+      - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./docker/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/mariadb/init.sql:/scripts/init.template.sql
+      - ./docker/mariadb/docker-entrypoint.sh:/docker-entrypoint-initdb.d/docker-initialize.sh
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+
+  mongo:
+    image: mongo:5.0
+    network_mode: "host"
+    volumes:
+      - mongo:/var/lib/mongodb
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+
+  redis:
+    image: redis:6.2.21
+    network_mode: "host"
+    volumes:
+      - redis:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    network_mode: "host"
+    command: [ "gotenberg", "--api-port=9000" ]
+
+# Volumes
+volumes:
+  mysql:
+    name: bigcapital_dev_mysql
+    driver: local
+
+  mongo:
+    name: bigcapital_dev_mongo
+    driver: local
+
+  redis:
+    name: bigcapital_dev_redis
+    driver: local

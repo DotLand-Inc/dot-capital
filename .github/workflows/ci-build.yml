@@ -1,0 +1,82 @@
+name: CI Build & Test
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+  workflow_call:
+    inputs:
+      push_images:
+        description: 'Push images to registry'
+        default: false
+        required: false
+        type: boolean
+      image_tag:
+        description: 'Tag to use for images'
+        default: 'develop'
+        required: false
+        type: string
+    secrets:
+      DOCKER_PAT:
+        required: true
+
+env:
+  DOCKER_USERNAME: hsaii
+  WEBAPP_IMAGE: bigcapitalhq/webapp
+  SERVER_IMAGE: bigcapitalhq/server
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        if: ${{ inputs.push_images }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PAT }}
+
+      # Webapp
+      - name: Build Webapp
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: ./packages/webapp/Dockerfile
+          push: ${{ inputs.push_images }}
+          tags: ${{ env.DOCKER_USERNAME }}/webapp:${{ inputs.image_tag || 'develop' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Test Webapp (Commented out as requested)
+      # - name: Test Webapp
+      #   run: |
+      #     npm ci
+      #     npm run test --workspace=packages/webapp
+
+      # Server
+      - name: Build Server
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: ./packages/server/Dockerfile
+          push: ${{ inputs.push_images }}
+          tags: ${{ env.DOCKER_USERNAME }}/server:${{ inputs.image_tag || 'develop' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Test Server (Commented out as requested)
+      # - name: Test Server
+      #   run: |
+      #     npm ci
+      #     npm run test --workspace=packages/server
