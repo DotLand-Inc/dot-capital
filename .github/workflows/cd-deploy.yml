@@ -50,6 +50,11 @@ jobs:
           # Clean for Webapp and Server
           delete_tag "webapp" "$TARGET_TAG"
           delete_tag "server" "$TARGET_TAG"
+          
+          # Clean for DB Services
+          delete_tag "mariadb" "$TARGET_TAG"
+          delete_tag "mongo" "$TARGET_TAG"
+          delete_tag "redis" "$TARGET_TAG"
 
   deploy-app:
     needs: cleanup-registry
