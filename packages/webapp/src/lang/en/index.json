@@ -2310,5 +2310,7 @@
   "api_key.label": "API Key",
   "api_key.copy_to_clipboard": "Copy to clipboard",
   "the_expenses_has_been_deleted_successfully": "The expenses have been deleted successfully.",
-  "french": "French"
+  "french": "French",
+  "german": "German",
+  "spanish": "Spanish"
 }

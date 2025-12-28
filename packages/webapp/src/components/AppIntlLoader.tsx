@@ -17,6 +17,8 @@ const SUPPORTED_LOCALES = [
   { name: 'English', value: 'en' },
   { name: 'العربية', value: 'ar' },
   { name: 'Français', value: 'fr' },
+  { name: 'Deutsch', value: 'de' },
+  { name: 'Español', value: 'es' },
 ];
 
 /**

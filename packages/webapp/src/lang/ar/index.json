@@ -2035,5 +2035,7 @@
   "warehouse_transfer.entries.remove_row": "حذف الصف",
   "item.details.inactive": "غير نشط",
   "bill.validation.due_date": "يجب أن يكون حقل {path} في وقت لاحق من {min}",
-  "french": "الفرنسية"
+  "french": "الفرنسية",
+  "german": "الألمانية",
+  "spanish": "الإسبانية"
 }

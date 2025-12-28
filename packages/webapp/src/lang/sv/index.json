@@ -2281,5 +2281,7 @@
   "preferences.credit_notes.success_message": "Inställningarna har sparats på ett framgångsrikt sätt.",
   "preferences.receipts.success_message": "Inställningarna har sparats på ett framgångsrikt sätt.",
   "preferences.invoices.success_message": "Inställningarna har sparats på ett framgångsrikt sätt.",
-  "french": "Franska"
+  "french": "Franska",
+  "german": "Tyska",
+  "spanish": "Spanska"
 }

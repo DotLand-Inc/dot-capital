@@ -2303,5 +2303,7 @@
   "preferences.credit_notes.success_message": "Las preferencias se han guardado con éxito.",
   "preferences.receipts.success_message": "Las preferencias se han guardado con éxito.",
   "preferences.invoices.success_message": "Las preferencias se han guardado con éxito.",
-  "french": "Francés"
+  "french": "Francés",
+  "german": "Alemán",
+  "spanish": "Español"
 }
