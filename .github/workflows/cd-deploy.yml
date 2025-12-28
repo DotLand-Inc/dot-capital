@@ -80,7 +80,7 @@ jobs:
       - name: Read Version
         id: version
         run: |
-          echo "VERSION=$(cat src/antigravity/dot-capital/VERSION)" >> $GITHUB_ENV
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
