@@ -1,11 +1,2 @@
-export const DATE_FORMATS = [
-  'MM/DD/YY',
-  'DD/MM/YY',
-  'YY/MM/DD',
-  'MM/DD/yyyy',
-  'DD/MM/yyyy',
-  'yyyy/MM/DD',
-  'DD MMM YYYY',
-  'DD MMMM YYYY',
-  'MMMM DD, YYYY',
-]; 
+// Re-export DATE_FORMATS from Organization constants to maintain single source of truth
+export { DATE_FORMATS } from '../Organization/Organization.constants'; 
