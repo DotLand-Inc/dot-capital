@@ -19,7 +19,11 @@ export function useRequestQuery(query, axios, props) {
 
   const states = useQuery(
     query,
-    () => apiRequest.http({ ...axios, url: `/api/${axios.url}` }),
+    () =>
+      apiRequest.http({
+        ...axios,
+        url: `/api/${axios.url.startsWith('/') ? axios.url.slice(1) : axios.url}`,
+      }),
     props,
   );
   // Momerize the default data.

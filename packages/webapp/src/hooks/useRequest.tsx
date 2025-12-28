@@ -9,6 +9,10 @@ import {
 } from './state';
 import { getCookie } from '../utils';
 
+const cleanResource = (resource) => {
+  return resource.startsWith('/') ? resource.slice(1) : resource;
+};
+
 export default function useApiRequest() {
   const setGlobalErrors = useSetGlobalErrors();
   const { setLogout } = useAuthActions();
@@ -93,27 +97,27 @@ export default function useApiRequest() {
       http,
 
       get(resource, params) {
-        return http.get(`/api/${resource}`, params);
+        return http.get(`/api/${cleanResource(resource)}`, params);
       },
 
       post(resource, params, config) {
-        return http.post(`/api/${resource}`, params, config);
+        return http.post(`/api/${cleanResource(resource)}`, params, config);
       },
 
       update(resource, slug, params) {
-        return http.put(`/api/${resource}/${slug}`, params);
+        return http.put(`/api/${cleanResource(resource)}/${slug}`, params);
       },
 
       put(resource, params) {
-        return http.put(`/api/${resource}`, params);
+        return http.put(`/api/${cleanResource(resource)}`, params);
       },
 
       patch(resource, params, config) {
-        return http.patch(`/api/${resource}`, params, config);
+        return http.patch(`/api/${cleanResource(resource)}`, params, config);
       },
 
       delete(resource, params) {
-        return http.delete(`/api/${resource}`, params);
+        return http.delete(`/api/${cleanResource(resource)}`, params);
       },
     }),
     [http],
@@ -130,22 +134,22 @@ export function useAuthApiRequest() {
     () => ({
       http,
       get(resource, params) {
-        return http.get(`/api/${resource}`, params);
+        return http.get(`/api/${cleanResource(resource)}`, params);
       },
       post(resource, params, config) {
-        return http.post(`/api/${resource}`, params, config);
+        return http.post(`/api/${cleanResource(resource)}`, params, config);
       },
       update(resource, slug, params) {
-        return http.put(`/api/${resource}/${slug}`, params);
+        return http.put(`/api/${cleanResource(resource)}/${slug}`, params);
       },
       put(resource, params) {
-        return http.put(`/api/${resource}`, params);
+        return http.put(`/api/${cleanResource(resource)}`, params);
       },
       patch(resource, params, config) {
-        return http.patch(`/api/${resource}`, params, config);
+        return http.patch(`/api/${cleanResource(resource)}`, params, config);
       },
       delete(resource, params) {
-        return http.delete(`/api/${resource}`, params);
+        return http.delete(`/api/${cleanResource(resource)}`, params);
       },
     }),
     [http],
