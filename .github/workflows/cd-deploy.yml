@@ -50,7 +50,8 @@ jobs:
           # Clean for Webapp and Server
           delete_tag "webapp" "$TARGET_TAG"
           delete_tag "server" "$TARGET_TAG"
-          
+          delete_tag "migration" "$TARGET_TAG"
+
           # Clean for DB Services
           delete_tag "mariadb" "$TARGET_TAG"
           delete_tag "mongo" "$TARGET_TAG"
@@ -117,6 +118,16 @@ jobs:
           file: ./packages/server/Dockerfile
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/server:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and Push Migration
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: ./docker/migration/Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_USERNAME }}/migration:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
