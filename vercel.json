@@ -2,9 +2,10 @@
   "installCommand": "pnpm install",
   "buildCommand": "CI='' pnpm run build:webapp",
   "outputDirectory": "packages/webapp/dist",
-  "rewrites": [{
+  "rewrites": [
+    {
       "source": "/api/:slug*",
-      "destination": "https://dev.bigcapital.ly/api/:slug*"
+      "destination": "https://dot-capital.vercel.app/api/:slug*"
     },
     {
       "source": "/(.*)",
