@@ -10,12 +10,12 @@ const TaxRatesLandingContext = React.createContext();
  * Cash Flow data provider.
  */
 function TaxRatesLandingProvider({ tableState, ...props }) {
-  // Fetch cash flow list .
+  // Fetch tax rates list.
   const {
     data: taxRates,
     isFetching: isTaxRatesFetching,
     isLoading: isTaxRatesLoading,
-  } = useTaxRates({}, { keepPreviousData: true });
+  } = useTaxRates({ keepPreviousData: true });
 
   // Detarmines whether the table should show empty state.
   const isEmptyStatus = isEmpty(taxRates) && !isTaxRatesLoading;

@@ -32,7 +32,10 @@ export const transformApiErrors = (errors) => {
  * Tranformes form values to request values.
  */
 export const transformFormToReq = (form) => {
-  return omit({ ...form }, ['confirm_edit']);
+  return {
+    ...omit({ ...form }, ['confirm_edit']),
+    rate: parseFloat(form.rate) || 0,
+  };
 };
 
 /**
