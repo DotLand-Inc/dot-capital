@@ -17,12 +17,25 @@ export class UploadDocument {
    * @returns {}
    */
   async upload(file: any) {
+    console.log('[S3 Upload] Saving document metadata to database:', {
+      key: file.key,
+      mimeType: file.mimetype,
+      size: file.size,
+      originName: file.originalname,
+    });
+
     const insertedDocument = await this.documentModel().query().insert({
       key: file.key,
       mimeType: file.mimetype,
       size: file.size,
       originName: file.originalname,
     });
+
+    console.log('[S3 Upload] Document metadata saved:', {
+      id: insertedDocument.id,
+      key: insertedDocument.key,
+    });
+
     return insertedDocument;
   }
 }

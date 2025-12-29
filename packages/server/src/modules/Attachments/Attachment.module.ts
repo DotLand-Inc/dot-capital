@@ -56,25 +56,48 @@ const models = [
     {
       provide: MULTER_MODULE_OPTIONS,
       inject: [ConfigService, S3_CLIENT],
-      useFactory: (configService: ConfigService, s3: S3Client) => ({
-        storage: multerS3({
-          s3,
-          bucket: configService.get('s3.bucket'),
-          contentType: multerS3.AUTO_CONTENT_TYPE,
-          metadata: function (req, file, cb) {
-            cb(null, { fieldName: file.fieldname });
-          },
-          key: function (req, file, cb) {
-            cb(null, Date.now().toString());
-          },
-          acl: function(req, file, cb) {
-            // Conditionally set file to public or private based on isPublic flag
-            const aclValue = true ? 'public-read' : 'private';
-            // Set ACL based on the isPublic flag
-            cb(null, aclValue); 
-          }
-        }),
-      })
+      useFactory: (configService: ConfigService, s3: S3Client) => {
+        const s3Config = configService.get('s3');
+        console.log('[S3 Upload] Multer-S3 configuration:', {
+          bucket: s3Config.bucket,
+          region: s3Config.region,
+          endpoint: s3Config.endpoint,
+          forcePathStyle: s3Config.forcePathStyle,
+          hasAccessKey: !!s3Config.accessKeyId,
+          hasSecretKey: !!s3Config.secretAccessKey,
+        });
+
+        return {
+          storage: multerS3({
+            s3,
+            bucket: s3Config.bucket,
+            contentType: multerS3.AUTO_CONTENT_TYPE,
+            metadata: function (req, file, cb) {
+              console.log('[S3 Upload] Setting metadata for file:', {
+                originalname: file.originalname,
+                mimetype: file.mimetype,
+              });
+              cb(null, { fieldName: file.fieldname });
+            },
+            key: function (req, file, cb) {
+              const key = Date.now().toString();
+              console.log('[S3 Upload] Generated S3 key:', {
+                key,
+                originalname: file.originalname,
+                bucket: s3Config.bucket,
+              });
+              cb(null, key);
+            },
+            acl: function(req, file, cb) {
+              // Conditionally set file to public or private based on isPublic flag
+              const aclValue = true ? 'public-read' : 'private';
+              console.log('[S3 Upload] Setting ACL:', { acl: aclValue });
+              // Set ACL based on the isPublic flag
+              cb(null, aclValue);
+            }
+          }),
+        };
+      }
     }
   ]
 })
