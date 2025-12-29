@@ -60,7 +60,11 @@ function CustomerFormFormik({
   // Handles the form submit.
   const handleFormSubmit = (values, formArgs) => {
     const { setSubmitting, resetForm } = formArgs;
-    const formValues = { ...values };
+    // Ensure boolean fields are actual booleans, not numbers
+    const formValues = {
+      ...values,
+      active: !!values.active,
+    };
 
     const onSuccess = (res) => {
       AppToaster.show({

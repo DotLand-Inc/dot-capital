@@ -298,19 +298,28 @@ export const aggregateItemEntriesTaxRates = R.curry(
     const filteredEntries = entries.filter((e) => e.tax_rate_id);
     const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
 
-    return Object.keys(groupedTaxRates).map((taxRateId) => {
-      const taxRate = taxRatesById[taxRateId];
-      const taxRates = groupedTaxRates[taxRateId];
-      const totalTaxAmount = sumBy(taxRates, 'tax_amount');
-      const taxAmountFormatted = formattedAmount(totalTaxAmount, currencyCode);
+    return Object.keys(groupedTaxRates)
+      .map((taxRateId) => {
+        const taxRate = taxRatesById[taxRateId];
 
-      return {
-        taxRateId,
-        taxRate: taxRate.rate,
-        label: `${taxRate.name} [${taxRate.rate}%]`,
-        taxAmount: totalTaxAmount,
-        taxAmountFormatted,
-      };
-    });
+        // Skip if tax rate not found
+        if (!taxRate) {
+          console.warn(`Tax rate with id ${taxRateId} not found`);
+          return null;
+        }
+
+        const taxRates = groupedTaxRates[taxRateId];
+        const totalTaxAmount = sumBy(taxRates, 'tax_amount');
+        const taxAmountFormatted = formattedAmount(totalTaxAmount, currencyCode);
+
+        return {
+          taxRateId,
+          taxRate: taxRate.rate,
+          label: `${taxRate.name} [${taxRate.rate}%]`,
+          taxAmount: totalTaxAmount,
+          taxAmountFormatted,
+        };
+      })
+      .filter(Boolean); // Remove null entries
   },
 );
