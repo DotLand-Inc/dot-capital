@@ -140,18 +140,18 @@ export class UpdateOrganizationDto {
   @ApiPropertyOptional({
     description: 'Organization address details',
     example: {
-      address_1: '123 Main St',
-      address_2: 'Suite 100',
-      postal_code: '10001',
+      address1: '123 Main St',
+      address2: 'Suite 100',
+      postalCode: '10001',
       city: 'New York',
       stateProvince: 'NY',
       phone: '+1-555-123-4567',
     },
   })
   address?: {
-    address_1?: string;
-    address_2?: string;
-    postal_code?: string;
+    address1?: string;
+    address2?: string;
+    postalCode?: string;
     city?: string;
     stateProvince?: string;
     phone?: string;
