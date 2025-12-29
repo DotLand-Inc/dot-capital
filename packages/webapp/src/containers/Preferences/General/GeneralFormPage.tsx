@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
+import Cookies from 'js-cookie';
 
 import '@/style/pages/Preferences/GeneralForm.scss';
 
@@ -57,6 +58,8 @@ function GeneralFormPage({
 
       // Reboot the application if the application's language is mutated.
       if (organization.metadata?.language !== values.language) {
+        localStorage.setItem('lang', values.language);
+        Cookies.set('locale', values.language);
         window.location.reload();
       }
     };
