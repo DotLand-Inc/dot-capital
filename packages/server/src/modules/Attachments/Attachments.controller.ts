@@ -64,13 +64,29 @@ export class AttachmentsController {
     description: 'Unauthorized - File upload failed',
   })
   async uploadAttachment(@UploadedFile() file: Express.Multer.File) {
+    console.log('[S3 Upload] File received in controller:', {
+      originalname: file?.originalname,
+      mimetype: file?.mimetype,
+      size: file?.size,
+      key: file?.['key'],
+      bucket: file?.['bucket'],
+      location: file?.['location'],
+    });
+
     if (!file) {
+      console.error('[S3 Upload] No file received in upload request');
       throw new UnauthorizedException({
         errorType: 'FILE_UPLOAD_FAILED',
         message: 'Now file uploaded.',
       });
     }
+
+    console.log('[S3 Upload] Starting upload to database...');
     const data = await this.attachmentsApplication.upload(file);
+    console.log('[S3 Upload] Upload completed successfully:', {
+      documentId: data.id,
+      key: data.key,
+    });
 
     return {
       status: 200,
