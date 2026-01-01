@@ -9,7 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar,FormattedMessage as T, Icon } from '@/components';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
@@ -40,7 +40,7 @@ function UnrealizedGainOrLossActionsBar({
   };
 
   // Handle recalculate report button.
-  const handleRecalculateReport = () => {};
+  const handleRecalculateReport = () => { };
 
   // handle number format form submit.
   const handleNumberFormatSubmit = (values) =>
@@ -92,11 +92,6 @@ function UnrealizedGainOrLossActionsBar({
           />
         </Popover>
 
-        <Button
-          className={classNames(Classes.MINIMAL, 'button--filter')}
-          text={<T id={'filter'} />}
-          icon={<Icon icon="filter-16" iconSize={16} />}
-        />
         <NavbarDivider />
 
         <Button

@@ -39,7 +39,7 @@ function RealizedGainOrLossActionsBar({
   };
 
   // Handle recalculate report button.
-  const handleRecalculateReport = () => {};
+  const handleRecalculateReport = () => { };
 
   // handle number format form submit.
   const handleNumberFormatSubmit = (values) =>
@@ -91,11 +91,6 @@ function RealizedGainOrLossActionsBar({
           />
         </Popover>
 
-        <Button
-          className={classNames(Classes.MINIMAL, 'button--filter')}
-          text={<T id={'filter'} />}
-          icon={<Icon icon="filter-16" iconSize={16} />}
-        />
         <NavbarDivider />
 
         <Button

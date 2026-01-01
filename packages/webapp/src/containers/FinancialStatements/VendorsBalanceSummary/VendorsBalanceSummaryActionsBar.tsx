@@ -107,13 +107,6 @@ function VendorsBalanceSummaryActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          text={<T id={'filter'} />}
-          icon={<Icon icon="filter-16" iconSize={16} />}
-        />
-        <NavbarDivider />
-
-        <Button
-          className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
