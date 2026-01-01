@@ -11,7 +11,6 @@ import {
   FeatureCan,
   FormTopbar,
   DetailsBarSkeletonBase,
-  FormBranchSelectButton,
 } from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 
