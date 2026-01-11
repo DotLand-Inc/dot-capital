@@ -6,14 +6,16 @@ WORKDIR /src
 COPY ["dotnet.sln", "./"]
 COPY ["Directory.Build.props", "./"]
 COPY ["Directory.Packages.props", "./"]
-COPY ["global.json", "./"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 COPY ["src/Web/Web.csproj", "src/Web/"]
 
-# Restore dependencies
+# Restore dependencies (without global.json to avoid version conflicts)
 RUN dotnet restore "dotnet.sln"
+
+# Now copy global.json and remaining source
+COPY ["global.json", "./"]
 
 # Copy source code
 COPY . .
