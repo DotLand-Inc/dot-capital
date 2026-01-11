@@ -14,6 +14,7 @@ public class CurrentUser : IUser
     }
 
     public string? Id => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+    public string? Email => Id; // Email is in NameIdentifier (from JWT 'sub' claim)
     public List<string>? Roles => _httpContextAccessor.HttpContext?.User?.FindAll(ClaimTypes.Role).Select(x => x.Value).ToList();
 
 }

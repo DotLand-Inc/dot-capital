@@ -6,6 +6,7 @@ public class Users : EndpointGroupBase
 {
     public override void Map(RouteGroupBuilder groupBuilder)
     {
-        groupBuilder.MapIdentityApi<ApplicationUser>();
+        // Removed Identity API endpoints - authentication handled by Node.js service
+        // groupBuilder.MapIdentityApi<ApplicationUser>();
     }
 }

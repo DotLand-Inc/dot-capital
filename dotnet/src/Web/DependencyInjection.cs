@@ -2,6 +2,7 @@
 using Dotland.DotCapital.WebApi.Application.Common.Interfaces;
 using Dotland.DotCapital.WebApi.Infrastructure.Data;
 using Dotland.DotCapital.WebApi.Web.Services;
+using Dotland.DotCapital.WebApi.Web.Transforms;
 using Microsoft.AspNetCore.Mvc;
 
 // ReSharper disable once CheckNamespace
@@ -14,15 +15,21 @@ public static class DependencyInjection
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddScoped<IUser, CurrentUser>();
-
         builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
 
         builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
+        // YARP Reverse Proxy
+        builder.Services.AddReverseProxy()
+            .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+            // .AddTransforms(builderContext =>
+            // {
+            //     builderContext.AddJwtForwardingTransforms();
+            // });
 
-        // Customise default API behaviour
         builder.Services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
 

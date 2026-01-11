@@ -12,11 +12,12 @@ public class TodoItems : EndpointGroupBase
 {
     public override void Map(RouteGroupBuilder groupBuilder)
     {
-        groupBuilder.MapGet(GetTodoItemsWithPagination).RequireAuthorization();
-        groupBuilder.MapPost(CreateTodoItem).RequireAuthorization();
-        groupBuilder.MapPut(UpdateTodoItem, "{id}").RequireAuthorization();
-        groupBuilder.MapPut(UpdateTodoItemDetail, "UpdateDetail/{id}").RequireAuthorization();
-        groupBuilder.MapDelete(DeleteTodoItem, "{id}").RequireAuthorization();
+        // Disabled - all requests proxied to Node.js backend
+        // groupBuilder.MapGet(GetTodoItemsWithPagination).RequireAuthorization();
+        // groupBuilder.MapPost(CreateTodoItem).RequireAuthorization();
+        // groupBuilder.MapPut(UpdateTodoItem, "{id}").RequireAuthorization();
+        // groupBuilder.MapPut(UpdateTodoItemDetail, "UpdateDetail/{id}").RequireAuthorization();
+        // groupBuilder.MapDelete(DeleteTodoItem, "{id}").RequireAuthorization();
     }
 
     public async Task<Ok<PaginatedList<TodoItemBriefDto>>> GetTodoItemsWithPagination(ISender sender, [AsParameters] GetTodoItemsWithPaginationQuery query)

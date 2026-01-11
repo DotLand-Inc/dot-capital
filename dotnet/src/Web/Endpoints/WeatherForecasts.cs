@@ -7,9 +7,9 @@ public class WeatherForecasts : EndpointGroupBase
 {
     public override void Map(RouteGroupBuilder groupBuilder)
     {
-        groupBuilder.RequireAuthorization();
-
-        groupBuilder.MapGet(GetWeatherForecasts);
+        // Disabled - all requests proxied to Node.js backend
+        // groupBuilder.RequireAuthorization();
+        // groupBuilder.MapGet(GetWeatherForecasts);
     }
 
     public async Task<Ok<IEnumerable<WeatherForecast>>> GetWeatherForecasts(ISender sender)

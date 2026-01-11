@@ -38,9 +38,10 @@ import vendorCredit from './VendorCredit/VendorCredit.reducer';
 import warehouseTransfers from './WarehouseTransfer/warehouseTransfer.reducer';
 import projects from './Project/projects.reducer';
 import { PlaidSlice } from './banking/banking.reducer';
+import contracts from './contracts/contracts.reducer';
 
 export interface ApplicationState {
-  
+
 }
 
 const appReducer = combineReducers({
@@ -79,6 +80,7 @@ const appReducer = combineReducers({
   warehouseTransfers,
   projects,
   plaid: PlaidSlice.reducer,
+  contracts,
 });
 
 // Reset the state of a redux store

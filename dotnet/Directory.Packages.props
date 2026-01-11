@@ -17,6 +17,7 @@
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
     <PackageVersion Include="MediatR" Version="13.1.0" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspnetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(AspnetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspnetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspnetVersion)" />
@@ -41,7 +42,8 @@
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.7.1" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EfcoreVersion)" />
     <PackageVersion Include="Testcontainers.MsSql" Version="4.8.1" />
   </ItemGroup>
