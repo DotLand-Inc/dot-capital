@@ -18,11 +18,9 @@ COPY ["tests/Application.FunctionalTests/Application.FunctionalTests.csproj", "t
 # Restore dependencies (without global.json to avoid version conflicts)
 RUN dotnet restore "dotnet.sln"
 
-# Now copy global.json and remaining source
-COPY ["global.json", "./"]
-
-# Copy source code
+# Copy source code (excluding global.json to avoid SDK version conflicts)
 COPY . .
+RUN rm -f global.json
 
 # Build and publish
 WORKDIR "/src/src/Web"
