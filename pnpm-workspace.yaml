@@ -1,4 +1,6 @@
 packages:
-  # all packages in direct subdirs of packages/
-  - 'packages/*'
-  - 'shared/*'
+  - packages/*
+  - shared/*
+
+ignoredBuiltDependencies:
+  - '@nestjs/core'

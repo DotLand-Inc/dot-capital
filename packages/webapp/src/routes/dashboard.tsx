@@ -665,6 +665,39 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
+  // Contracts
+  {
+    path: `/contracts/:id/edit`,
+    component: lazy(
+      () => import('@/containers/Contracts/ContractForm/ContractFormPage'),
+    ),
+    name: 'contract-edit',
+    breadcrumb: intl.get('edit_contract'),
+    pageTitle: intl.get('edit_contract'),
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/contracts/new`,
+    component: lazy(
+      () => import('@/containers/Contracts/ContractForm/ContractFormPage'),
+    ),
+    name: 'contract-new',
+    breadcrumb: intl.get('new_contract'),
+    pageTitle: intl.get('new_contract'),
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/contracts`,
+    component: lazy(
+      () => import('@/containers/Contracts/ContractList/ContractsList'),
+    ),
+    breadcrumb: intl.get('contracts'),
+    pageTitle: intl.get('contracts_list'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
   // Estimates
   {
     path: `/estimates/import`,

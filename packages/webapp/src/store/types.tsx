@@ -33,6 +33,7 @@ import vendorCredit from './VendorCredit/vendorCredit.type';
 import WarehouseTransfer from './WarehouseTransfer/warehouseTransfer.type';
 import projects from './Project/projects.type'
 import plans from './plans/plans.types';
+import contracts from './contracts/contracts.types';
 
 export default {
   ...authentication,
@@ -68,5 +69,6 @@ export default {
   ...creditNote,
   ...vendorCredit,
   ...WarehouseTransfer,
-  ...projects
+  ...projects,
+  ...contracts
 };

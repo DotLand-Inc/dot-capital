@@ -554,6 +554,38 @@ export const SidebarMenu = [
       },
     ],
   },
+  // ---------------
+  // # Contracts
+  // ---------------
+  {
+    text: <T id={'contracts'} />,
+    type: ISidebarMenuItemType.Overlay,
+    overlayId: ISidebarMenuOverlayIds.Contracts,
+    children: [
+      {
+        text: <T id={'contracts'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'contracts'} />,
+            href: '/contracts',
+            type: ISidebarMenuItemType.Link,
+          },
+        ],
+      },
+      {
+        text: <T id={'sidebar.new_tasks'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: <T id={'new_contract'} />,
+            href: '/contracts/new',
+            type: ISidebarMenuItemType.Link,
+          },
+        ],
+      },
+    ],
+  },
   // ---------------------
   // # Projects Management
   // ---------------------
