@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { renderCreditNotePaperTemplateHtml } from '@bigcapital/pdf-templates';
 import { GetCreditNoteService } from './GetCreditNote.service';
 import { CreditNoteBrandingTemplate } from './CreditNoteBrandingTemplate.service';
 import { transformCreditNoteToPdfTemplate } from '../utils';
@@ -24,7 +25,6 @@ export class GetCreditNotePdf {
    */
   constructor(
     private readonly chromiumlyTenancy: ChromiumlyTenancy,
-    private readonly templateInjectable: TemplateInjectable,
     private readonly getCreditNoteService: GetCreditNoteService,
     private readonly creditNoteBrandingTemplate: CreditNoteBrandingTemplate,
     private readonly eventPublisher: EventEmitter2,
@@ -36,23 +36,40 @@ export class GetCreditNotePdf {
     private readonly pdfTemplateModel: TenantModelProxy<
       typeof PdfTemplateModel
     >,
-  ) {}
+  ) { }
 
   /**
-   * Retrieves sale invoice pdf content.
+   * Retrieves credit note html content.
+   * @param {number} creditNoteId - Credit note id.
+   * @returns {Promise<string>}
+   */
+  public async getCreditNoteHtml(creditNoteId: number): Promise<string> {
+    const brandingAttributes =
+      await this.getCreditNoteBrandingAttributes(creditNoteId);
+
+    // Map attributes to match the React component props
+    // The branding template returns companyLogoUri, but type may have companyLogo
+    const props = {
+      ...brandingAttributes,
+      companyLogoUri:
+        (brandingAttributes as any).companyLogoUri ||
+        (brandingAttributes as any).companyLogo ||
+        '',
+    };
+
+    return renderCreditNotePaperTemplateHtml(props);
+  }
+
+  /**
+   * Retrieves credit note pdf content.
    * @param {number} creditNoteId - Credit note id.
    * @returns {Promise<[Buffer, string]>}
    */
   public async getCreditNotePdf(
     creditNoteId: number,
   ): Promise<[Buffer, string]> {
-    const brandingAttributes =
-      await this.getCreditNoteBrandingAttributes(creditNoteId);
-    const htmlContent = await this.templateInjectable.render(
-      'modules/credit-note-standard',
-      brandingAttributes,
-    );
     const filename = await this.getCreditNoteFilename(creditNoteId);
+    const htmlContent = await this.getCreditNoteHtml(creditNoteId);
 
     const document =
       await this.chromiumlyTenancy.convertHtmlContent(htmlContent);

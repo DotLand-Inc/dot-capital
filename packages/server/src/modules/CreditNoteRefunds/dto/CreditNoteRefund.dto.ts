@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
+import { ToNumber, IsOptional } from '@/common/decorators/Validators';
+import { IsDateString, IsNotEmpty, IsPositive, IsString } from 'class-validator';
 import { IsDate } from 'class-validator';
 import { IsNumber } from 'class-validator';
 
@@ -12,6 +13,7 @@ export class CreditNoteRefundDto {
   })
   fromAccountId: number;
 
+  @ToNumber()
   @IsNumber()
   @IsPositive()
   @IsNotEmpty()
@@ -21,6 +23,7 @@ export class CreditNoteRefundDto {
   })
   amount: number;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @IsPositive()
@@ -38,15 +41,15 @@ export class CreditNoteRefundDto {
   })
   referenceNo: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'The description of the credit note refund',
     example: 'Credit note refund',
   })
   description: string;
 
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({
     description: 'The date of the credit note refund',
@@ -54,6 +57,7 @@ export class CreditNoteRefundDto {
   })
   date: Date;
 
+  @ToNumber()
   @IsNumber()
   @IsOptional()
   @ApiProperty({

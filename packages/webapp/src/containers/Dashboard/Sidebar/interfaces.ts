@@ -70,6 +70,7 @@ export enum ISidebarMenuOverlayIds {
   Contacts = 'Contacts',
   Cashflow = 'Cashflow',
   Expenses = 'Expenses',
+  Contracts = 'Contracts',
   Projects = 'Projects',
 }
 

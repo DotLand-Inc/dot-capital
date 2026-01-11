@@ -51,6 +51,7 @@ jobs:
           delete_tag "webapp" "$TARGET_TAG"
           delete_tag "server" "$TARGET_TAG"
           delete_tag "migration" "$TARGET_TAG"
+          delete_tag "dot-capital-proxy" "$TARGET_TAG"
 
           # Clean for DB Services
           delete_tag "mariadb" "$TARGET_TAG"
@@ -148,6 +149,18 @@ jobs:
           context: ./docker/redis
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/redis:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and Push Proxy
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dotnet
+          file: ./dotnet/Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/dot-capital-proxy:latest
+            ${{ env.DOCKER_USERNAME }}/dot-capital-proxy:${{ env.VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

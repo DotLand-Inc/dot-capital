@@ -25,6 +25,7 @@ env:
   DOCKER_USERNAME: hsaii
   WEBAPP_IMAGE: bigcapitalhq/webapp
   SERVER_IMAGE: bigcapitalhq/server
+  PROXY_IMAGE: hsaii/dot-capital-proxy
 
 jobs:
   build-and-test:
@@ -53,7 +54,7 @@ jobs:
         with:
           context: ./
           file: ./packages/webapp/Dockerfile
-          push: ${{ inputs.push_images }}
+          push: ${{ inputs.push_images == true }}
           tags: ${{ env.DOCKER_USERNAME }}/webapp:${{ inputs.image_tag || 'develop' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -70,7 +71,7 @@ jobs:
         with:
           context: ./
           file: ./packages/server/Dockerfile
-          push: ${{ inputs.push_images }}
+          push: ${{ inputs.push_images == true }}
           tags: ${{ env.DOCKER_USERNAME }}/server:${{ inputs.image_tag || 'develop' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -80,3 +81,14 @@ jobs:
       #   run: |
       #     npm ci
       #     npm run test --workspace=packages/server
+
+      # Proxy (.NET)
+      - name: Build Proxy
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dotnet
+          file: ./dotnet/Dockerfile
+          push: ${{ inputs.push_images == true }}
+          tags: ${{ env.PROXY_IMAGE }}:${{ inputs.image_tag || 'develop' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

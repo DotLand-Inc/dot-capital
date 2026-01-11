@@ -16,7 +16,12 @@ function VendorFormAfterPrimarySection() {
         label={<T id={'vendor_email'} />}
         inline={true}
       >
-        <FInputGroup name={'email'} />
+        <FInputGroup
+          name={'email'}
+          type="email"
+          autoCapitalize="off"
+          autoCorrect="off"
+        />
       </FFormGroup>
 
       {/*------------ Phone number -----------*/}
@@ -27,17 +32,28 @@ function VendorFormAfterPrimarySection() {
         inline={true}
       >
         <ControlGroup>
-          <FInputGroup name={'work_phone'} placeholder={intl.get('work')} />
+          <FInputGroup
+            name={'work_phone'}
+            placeholder={intl.get('work')}
+            type="tel"
+          />
           <FInputGroup
             name={'personal_phone'}
             placeholder={intl.get('mobile')}
+            type="tel"
           />
         </ControlGroup>
       </FFormGroup>
 
       {/*------------ Vendor website -----------*/}
       <FFormGroup name={'website'} label={<T id={'website'} />} inline={true}>
-        <FInputGroup name={'website'} placeholder={'http://'} />
+        <FInputGroup
+          name={'website'}
+          placeholder={'http://'}
+          type="url"
+          autoCapitalize="off"
+          autoCorrect="off"
+        />
       </FFormGroup>
     </div>
   );
