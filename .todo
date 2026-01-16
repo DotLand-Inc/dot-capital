@@ -1,0 +1,247 @@
+Based on my comprehensive analysis of the codebase, here's your migration plan: 
+- What Can Be Migrated With Minimal Effort                                                                                                                            
+                                                                                                                                                                      
+  Immediate Wins (Low Effort - 2-4 weeks)                                                                                                                             
+                                                                                                                                                                      
+  1. Authentication & Authorization ⭐                                                                                                                                
+    - JWT validation is already configured in .NET                                                                                                                    
+    - Just need to add API key authentication                                                                                                                         
+    - Effort: ~3-5 days                                                                                                                                               
+  2. Multi-Tenancy Context ⭐ (Critical Foundation)                                                                                                                   
+    - Extract tenant ID from JWT → inject into DbContext                                                                                                              
+    - Simple service implementation                                                                                                                                   
+    - Effort: ~2-3 days                                                                                                                                               
+  3. User & Role Management                                                                                                                                           
+    - ApplicationUser already exists, just extend it                                                                                                                  
+    - Basic RBAC in .NET is ready                                                                                                                                     
+    - Effort: ~3-4 days                                                                                                                                               
+  4. Master Data Modules (Simple CRUD)                                                                                                                                
+    - Accounts (Chart of Accounts)                                                                                                                                    
+    - Items & ItemCategories                                                                                                                                          
+    - Customers & Vendors                                                                                                                                             
+    - TaxRates, Currencies, Warehouses                                                                                                                                
+    - Effort: ~3-6 days each                                                                                                                                          
+                                                                                                                                                                      
+  Moderate Effort (4-8 weeks)                                                                                                                                         
+                                                                                                                                                                      
+  5. Basic Transactions                                                                                                                                               
+    - Manual Journals with GL posting                                                                                                                                 
+    - Expenses                                                                                                                                                        
+    - Account Transactions                                                                                                                                            
+    - Effort: ~8-10 days each                                                                                                                                         
+  6. Inventory Management                                                                                                                                             
+    - Stock levels, adjustments                                                                                                                                       
+    - Warehouse transfers                                                                                                                                             
+    - Effort: ~7-9 days                                                                                                                                               
+                                                                                                                                                                      
+  High Complexity (Avoid Initially)                                                                                                                                   
+                                                                                                                                                                      
+  - Invoices/Bills: 20-30 days each (complex GL entries, state machines, PDF generation)                                                                              
+  - Payment Reconciliation: 15-25 days (Plaid integration, matching algorithms)                                                                                       
+  - Financial Statements: 20-25 days (complex calculations)                                                                                                           
+  - Subscription/Billing: 15-20 days (Stripe integration)                                                                                                             
+                                                                                                                                                                      
+  Current State                                                                                                                                                       
+                                                                                                                                                                      
+  Node.js Backend (NestJS):                                                                                                                                           
+  - 80 modules, 412 services                                                                                                                                          
+  - Complex multi-tenant architecture                                                                                                                                 
+  - 100+ tenant DB migrations, 20+ system DB migrations                                                                                                               
+                                                                                                                                                                      
+  .NET App:                                                                                                                                                           
+  - Clean Architecture skeleton in place (CQRS + MediatR)                                                                                                             
+  - Currently just a YARP reverse proxy to Node.js                                                                                                                    
+  - Only has TodoList/TodoItem demo entities                                                                                                                          
+  - JWT auth configured, EF Core ready                                                                                                                                
+                                                                                                                                                                      
+  Recommended Migration Plan                                                                                                                                          
+                                                                                                                                                                      
+  Phase 1: Foundation (3-4 weeks)                                                                                                                                     
+                                                                                                                                                                      
+  Start here to establish the base:                                                                                                                                   
+  - Multi-tenant database context                                                                                                                                     
+  - Complete authentication (JWT + API keys)                                                                                                                          
+  - Role/permission system                                                                                                                                            
+  - System database schema (users, tenants, subscriptions)                                                                                                            
+                                                                                                                                                                      
+  Phase 2: Master Data (4-5 weeks)                                                                                                                                    
+                                                                                                                                                                      
+  Build the data foundation:                                                                                                                                          
+  - Accounts (Chart of Accounts with hierarchy)                                                                                                                       
+  - TaxRates, Currencies                                                                                                                                              
+  - Items, ItemCategories                                                                                                                                             
+  - Customers, Vendors                                                                                                                                                
+  - Warehouses                                                                                                                                                        
+                                                                                                                                                                      
+  Phase 3: Basic Transactions (5-6 weeks)                                                                                                                             
+                                                                                                                                                                      
+  Enable basic accounting:                                                                                                                                            
+  - Manual Journals with GL posting                                                                                                                                   
+  - Expenses                                                                                                                                                          
+  - Ledger queries                                                                                                                                                    
+  - Trial balance report                                                                                                                                              
+                                                                                                                                                                      
+  Phase 4: Invoicing (Later - 5-7 weeks each)                                                                                                                         
+                                                                                                                                                                      
+  Complex modules to tackle after foundation is solid                                                                                                                 
+                                                                                                                                                                      
+  Key Technical Challenges                                                                                                                                            
+                                                                                                                                                                      
+  1. Database Migration: MySQL (Knex) → SQL Server (EF Core)                                                                                                          
+  2. Multi-tenancy: Need tenant-aware DbContext for every query                                                                                                       
+  3. GL Posting Logic: Double-entry bookkeeping rules must be perfect                                                                                                 
+  4. PDF Generation: Node.js uses Pug templates - consider wrapping or porting                                                                                        
+                                                                                                                                                                      
+  Deployment Strategy                                                                                                                                                 
+                                                                                                                                                                      
+  Recommended: Parallel Deployment                                                                                                                                    
+  - Keep both .NET and Node.js running                                                                                                                                
+  - .NET handles migrated endpoints                                                                                                                                   
+  - YARP routes unmigrated requests to Node.js                                                                                                                        
+  - Zero downtime, gradual cutover                                                                                                                                    
+                                                                                                                                                                      
+  Would you like me to start with Phase 1 (Foundation) or would you prefer a different approach?  
+
+  Great question! Let me show you what can be migrated without needing complex authentication/authorization:                                                          
+                                                                                                                                                                      
+  ✅ Public Endpoints (No Auth Required)                                                                                                                              
+                                                                                                                                                                      
+  1. Webhooks (Easiest - 1-2 days each)                                                                                                                               
+                                                                                                                                                                      
+  These use external signature verification, not your auth system:                                                                                                    
+  - Stripe Webhooks (/webhooks/stripe) - packages/server/src/modules/StripePayment/StripePaymentWebhooks.controller.ts:26                                             
+  - Plaid Webhooks (/banking/plaid/webhooks) - packages/server/src/modules/BankingPlaid/BankingPlaidWebhooks.controller.ts:10                                         
+  - LemonSqueezy Webhooks (/webhooks/lemon) - packages/server/src/modules/Subscription/SubscriptionsLemonWebhook.controller.ts:5                                      
+                                                                                                                                                                      
+  Why easy:                                                                                                                                                           
+  - No JWT/tenant context needed                                                                                                                                      
+  - Just signature validation (Stripe SDK, Plaid SDK)                                                                                                                 
+  - Simple POST endpoints                                                                                                                                             
+  - Already isolated logic                                                                                                                                            
+                                                                                                                                                                      
+  2. Auth Endpoints (2-3 days)                                                                                                                                        
+                                                                                                                                                                      
+  Public by design with @PublicRoute() decorator:                                                                                                                     
+  - POST /auth/signin                                                                                                                                                 
+  - POST /auth/signup                                                                                                                                                 
+  - POST /auth/signup/confirm                                                                                                                                         
+  - POST /auth/send_reset_password                                                                                                                                    
+  - POST /auth/reset_password/:token                                                                                                                                  
+  - GET /auth/meta                                                                                                                                                    
+                                                                                                                                                                      
+  Why easy:                                                                                                                                                           
+  - These CREATE the auth tokens, don't need them                                                                                                                     
+  - Self-contained logic                                                                                                                                              
+  - No tenant database queries needed                                                                                                                                 
+                                                                                                                                                                      
+  ---                                                                                                                                                                 
+  ⚠️ Reference Data (Requires Tenant Context BUT Simple Logic)                                                                                                        
+                                                                                                                                                                      
+  These need authentication but have very simple CRUD logic:                                                                                                          
+                                                                                                                                                                      
+  3. Currencies Module (3-4 days)                                                                                                                                     
+                                                                                                                                                                      
+  Location: packages/server/src/modules/Currencies/                                                                                                                   
+                                                                                                                                                                      
+  Database Schema:                                                                                                                                                    
+  currencies table:                                                                                                                                                   
+  - id (auto increment)                                                                                                                                               
+  - currency_name                                                                                                                                                     
+  - currency_code (4 chars)                                                                                                                                           
+  - currency_sign                                                                                                                                                     
+  - created_at, updated_at                                                                                                                                            
+                                                                                                                                                                      
+  Endpoints:                                                                                                                                                          
+  - GET /currencies - List all                                                                                                                                        
+  - GET /currencies/:code - Get one                                                                                                                                   
+  - POST /currencies - Create                                                                                                                                         
+  - PUT /currencies/:id - Edit                                                                                                                                        
+  - DELETE /currencies/:code - Delete                                                                                                                                 
+                                                                                                                                                                      
+  Why relatively easy:                                                                                                                                                
+  - Simple table, no complex relationships                                                                                                                            
+  - No GL entries or transactions                                                                                                                                     
+  - Just basic validation (unique code, etc.)                                                                                                                         
+  - However: Needs tenant database context                                                                                                                            
+                                                                                                                                                                      
+  ---                                                                                                                                                                 
+  📊 Static/Constant Data (Could be NO database at all)                                                                                                               
+                                                                                                                                                                      
+  4. Account Type Constants (1-2 days)                                                                                                                                
+                                                                                                                                                                      
+  The account types are essentially fixed (Asset, Liability, Equity, Income, Expense). These could be:                                                                
+  - Hard-coded constants in .NET                                                                                                                                      
+  - Served from a simple JSON file                                                                                                                                    
+  - Seeded data in database                                                                                                                                           
+                                                                                                                                                                      
+  Location: packages/server/src/modules/Accounts/constants.ts:37                                                                                                      
+                                                                                                                                                                      
+  Data to port:                                                                                                                                                       
+  AccountDefaultViews = [                                                                                                                                             
+    { name: 'Assets', slug: 'assets', root_type: 'asset' },                                                                                                           
+    { name: 'Liabilities', slug: 'liabilities', root_type: 'liability' },                                                                                             
+    { name: 'Equity', slug: 'equity', root_type: 'equity' },                                                                                                          
+    { name: 'Income', slug: 'income', root_type: 'income' },                                                                                                          
+    { name: 'Expenses', slug: 'expenses', root_type: 'expense' }                                                                                                      
+  ]                                                                                                                                                                   
+                                                                                                                                                                      
+  5. Initial Currencies List (Static)                                                                                                                                 
+                                                                                                                                                                      
+  Location: packages/server/src/modules/Currencies/Currencies.constants.ts:1                                                                                          
+  InitialCurrencies = ['USD', 'CAD', 'EUR', 'LYD', 'GBP', 'CNY', 'AUD', 'INR']                                                                                        
+                                                                                                                                                                      
+  This could be an endpoint like GET /constants/currencies with no database hit.                                                                                      
+                                                                                                                                                                      
+  ---                                                                                                                                                                 
+  🎯 My Recommendation: Start Here                                                                                                                                    
+                                                                                                                                                                      
+  Phase 0: Pre-Auth Foundation (1-2 weeks)                                                                                                                            
+                                                                                                                                                                      
+  Priority 1: Webhooks + Auth Endpoints                                                                                                                               
+  1. Stripe webhooks (2 days)                                                                                                                                         
+  2. Plaid webhooks (2 days)                                                                                                                                          
+  3. Auth endpoints (signup/signin/password reset) (3 days)                                                                                                           
+                                                                                                                                                                      
+  Why this order:                                                                                                                                                     
+  - Zero tenant complexity                                                                                                                                            
+  - Self-contained                                                                                                                                                    
+  - Immediate value (can handle external integrations)                                                                                                                
+  - Builds confidence in migration process                                                                                                                            
+                                                                                                                                                                      
+  Priority 2: Static Constants API                                                                                                                                    
+  4. Create a /constants endpoint serving:                                                                                                                            
+  - Account types                                                                                                                                                     
+  - Initial currencies                                                                                                                                                
+  - Date format options                                                                                                                                               
+  - Any other static reference data                                                                                                                                   
+                                                                                                                                                                      
+  Effort: ~1 day                                                                                                                                                      
+                                                                                                                                                                      
+  ---                                                                                                                                                                 
+  Then Move to Phase 1: Tenant-Aware Reference Data                                                                                                                   
+                                                                                                                                                                      
+  Once you have auth working (from Phase 1 in previous analysis), then:                                                                                               
+  - Currencies CRUD (3-4 days)                                                                                                                                        
+  - TaxRates (similar to currencies, 3-4 days)                                                                                                                        
+                                                                                                                                                                      
+  ---                                                                                                                                                                 
+  Summary Table                                                                                                                                                       
+  ┌───────────────────────┬──────────────────────┬─────────────────┬──────────────────┬──────────┬────────────────┐                                                   
+  │        Module         │    Auth Required?    │ Tenant Context? │ Database Writes? │  Effort  │ Can Start Now? │                                                   
+  ├───────────────────────┼──────────────────────┼─────────────────┼──────────────────┼──────────┼────────────────┤                                                   
+  │ Stripe Webhooks       │ ❌ No                │ ❌ No           │ ✅ Yes           │ 2 days   │ ✅ YES         │                                                   
+  ├───────────────────────┼──────────────────────┼─────────────────┼──────────────────┼──────────┼────────────────┤                                                   
+  │ Plaid Webhooks        │ ❌ No                │ ❌ No           │ ✅ Yes           │ 2 days   │ ✅ YES         │                                                   
+  ├───────────────────────┼──────────────────────┼─────────────────┼──────────────────┼──────────┼────────────────┤                                                   
+  │ LemonSqueezy Webhooks │ ❌ No                │ ❌ No           │ ✅ Yes           │ 2 days   │ ✅ YES         │                                                   
+  ├───────────────────────┼──────────────────────┼─────────────────┼──────────────────┼──────────┼────────────────┤                                                   
+  │ Auth Endpoints        │ ❌ No (creates auth) │ ❌ No           │ ✅ Yes           │ 3 days   │ ✅ YES         │                                                   
+  ├───────────────────────┼──────────────────────┼─────────────────┼──────────────────┼──────────┼────────────────┤                                                   
+  │ Static Constants      │ ❌ No                │ ❌ No           │ ❌ No            │ 1 day    │ ✅ YES         │                                                   
+  ├───────────────────────┼──────────────────────┼─────────────────┼──────────────────┼──────────┼────────────────┤                                                   
+  │ Currencies            │ ✅ Yes               │ ✅ Yes          │ ✅ Yes           │ 3-4 days │ ⚠️ After auth  │                                                   
+  ├───────────────────────┼──────────────────────┼─────────────────┼──────────────────┼──────────┼────────────────┤                                                   
+  │ TaxRates              │ ✅ Yes               │ ✅ Yes          │ ✅ Yes           │ 3-4 days │ ⚠️ After auth  │                                                   
+  └───────────────────────┴──────────────────────┴─────────────────┴──────────────────┴──────────┴────────────────┘                                                   
+  ---                                                                                                                                                                 
+  Would you like me to start with the webhooks or auth endpoints migration? They're truly zero-dependency and can be done right now!           

@@ -1,6 +1,3 @@
-using Dotland.DotCapital.WebApi.Infrastructure.Data;
-using Dotland.DotCapital.WebApi.Web.Middleware;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container

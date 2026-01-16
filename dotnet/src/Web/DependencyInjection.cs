@@ -4,6 +4,7 @@ using Dotland.DotCapital.WebApi.Infrastructure.Data;
 using Dotland.DotCapital.WebApi.Web.Services;
 using Dotland.DotCapital.WebApi.Web.Transforms;
 using Microsoft.AspNetCore.Mvc;
+using Yarp.ReverseProxy.Transforms;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -21,10 +22,19 @@ public static class DependencyInjection
             .AddDbContextCheck<ApplicationDbContext>();
 
         builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-
+        builder.Services.AddHttpContextAccessor();
         // YARP Reverse Proxy
         builder.Services.AddReverseProxy()
-            .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+            .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+            .AddTransforms(transformBuilderContext =>
+            {
+                transformBuilderContext.AddRequestTransform(context =>
+                {
+                   Console.WriteLine(context.HttpContext.Request.Headers["Authorization"]);
+
+                    return ValueTask.CompletedTask;
+                });
+            });
             // .AddTransforms(builderContext =>
             // {
             //     builderContext.AddJwtForwardingTransforms();
