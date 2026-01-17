@@ -1,10 +1,8 @@
 ﻿using Dotland.DotCapital.WebApi.Application.Common.Interfaces;
-using Dotland.DotCapital.WebApi.Domain.Constants;
 using Dotland.DotCapital.WebApi.Infrastructure.Data;
 using Dotland.DotCapital.WebApi.Infrastructure.Data.Interceptors;
-using Dotland.DotCapital.WebApi.Infrastructure.Identity;
+using Dotland.DotCapital.WebApi.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -24,16 +22,35 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<ITenantService, TenantService>();
 
-        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        // System DbContext
+        builder.Services.AddDbContext<SystemDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
-            options.UseSqlServer(connectionString);
-            options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
+            
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
+        builder.Services.AddScoped<ISystemDbContext>(provider => provider.GetRequiredService<SystemDbContext>());
 
-        builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        // Tenant DbContext
+        builder.Services.AddDbContext<TenantDbContext>((sp, options) =>
+        {
+            var tenantService = sp.GetRequiredService<ITenantService>();
+            var connectionString = tenantService.GetConnectionString();
+
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            }
+            // If no tenant is resolved, we might want to throw or allow a specific failure mode.
+            // For now, EF will likely throw if initialized without a provider.
+        });
 
 
         builder.Services

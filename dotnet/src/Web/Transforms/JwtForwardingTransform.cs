@@ -1,7 +1,6 @@
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Dotland.DotCapital.WebApi.Web.Transforms;
 

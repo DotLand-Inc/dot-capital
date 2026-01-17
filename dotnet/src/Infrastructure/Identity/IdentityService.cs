@@ -2,7 +2,6 @@ using Dotland.DotCapital.WebApi.Application.Common.Interfaces;
 using Dotland.DotCapital.WebApi.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dotland.DotCapital.WebApi.Infrastructure.Identity;
 

@@ -1,8 +1,6 @@
-﻿using Azure.Identity;
-using Dotland.DotCapital.WebApi.Application.Common.Interfaces;
+﻿using Dotland.DotCapital.WebApi.Application.Common.Interfaces;
 using Dotland.DotCapital.WebApi.Infrastructure.Data;
 using Dotland.DotCapital.WebApi.Web.Services;
-using Dotland.DotCapital.WebApi.Web.Transforms;
 using Microsoft.AspNetCore.Mvc;
 using Yarp.ReverseProxy.Transforms;
 
@@ -19,7 +17,7 @@ public static class DependencyInjection
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>();
+            .AddDbContextCheck<SystemDbContext>();
 
         builder.Services.AddExceptionHandler<CustomExceptionHandler>();
         builder.Services.AddHttpContextAccessor();

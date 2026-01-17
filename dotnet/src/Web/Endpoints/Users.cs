@@ -1,6 +1,4 @@
-﻿using Dotland.DotCapital.WebApi.Infrastructure.Identity;
-
-namespace Dotland.DotCapital.WebApi.Web.Endpoints;
+﻿namespace Dotland.DotCapital.WebApi.Web.Endpoints;
 
 public class Users : EndpointGroupBase
 {

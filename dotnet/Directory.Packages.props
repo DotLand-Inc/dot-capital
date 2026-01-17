@@ -3,9 +3,9 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <AspireVersion>9.5.2</AspireVersion>
-    <AspnetVersion>10.0.0</AspnetVersion>
-    <EfcoreVersion>10.0.0</EfcoreVersion>
-    <MicrosoftExtensionsVersion>10.0.0</MicrosoftExtensionsVersion>
+    <AspnetVersion>9.0.0</AspnetVersion>
+    <EfcoreVersion>9.0.0</EfcoreVersion>
+    <MicrosoftExtensionsVersion>9.0.0</MicrosoftExtensionsVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0" />
@@ -27,7 +27,7 @@
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.14.28" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="5.2.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(EfcoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(EfcoreVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EfcoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(EfcoreVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsVersion)" />
@@ -39,6 +39,7 @@
     <PackageVersion Include="nunit" Version="4.4.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
+    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
