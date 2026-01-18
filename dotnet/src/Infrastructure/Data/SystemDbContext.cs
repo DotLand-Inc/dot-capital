@@ -8,10 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dotland.DotCapital.WebApi.Infrastructure.Data;
 
-public class SystemDbContext : IdentityDbContext<ApplicationUser>, ISystemDbContext
+public class SystemDbContext(DbContextOptions<SystemDbContext> options)
+    : IdentityDbContext<ApplicationUser>(options), ISystemDbContext
 {
-    public SystemDbContext(DbContextOptions<SystemDbContext> options) : base(options) { }
-
     public DbSet<TenantEntity> Tenants => Set<TenantEntity>();
     public DbSet<Domain.Entities.System.TenantsMetadata> TenantsMetadatas => Set<Domain.Entities.System.TenantsMetadata>();
     public DbSet<Domain.Entities.System.SubscriptionPlan> SubscriptionPlans => Set<Domain.Entities.System.SubscriptionPlan>();

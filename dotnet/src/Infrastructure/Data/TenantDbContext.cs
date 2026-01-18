@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Dotland.DotCapital.WebApi.Domain.Entities.Tenant;
+using Dotland.DotCapital.WebApi.Application.Common.Interfaces;
 
 namespace Dotland.DotCapital.WebApi.Infrastructure.Data;
 
-public class TenantDbContext : DbContext
+public class TenantDbContext : DbContext, IApplicationDbContext
 {
     public TenantDbContext(DbContextOptions<TenantDbContext> options) : base(options) { }
 

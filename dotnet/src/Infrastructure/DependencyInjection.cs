@@ -10,7 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Dotland.DotCapital.WebApi.Infrastructure.Identity;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
@@ -25,15 +27,16 @@ public static class DependencyInjection
         
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ITenantService, TenantService>();
+        builder.Services.AddScoped<IIdentityService, IdentityService>();
 
         // System DbContext
         builder.Services.AddDbContext<SystemDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
+            var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+            Guard.Against.Null(defaultConnection, message: "Connection string 'DefaultConnection' not found.");
             
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            options.UseMySql(defaultConnection, ServerVersion.AutoDetect(defaultConnection));
         });
 
         builder.Services.AddScoped<ISystemDbContext>(provider => provider.GetRequiredService<SystemDbContext>());
@@ -42,15 +45,17 @@ public static class DependencyInjection
         builder.Services.AddDbContext<TenantDbContext>((sp, options) =>
         {
             var tenantService = sp.GetRequiredService<ITenantService>();
-            var connectionString = tenantService.GetConnectionString();
+            var tenantConnectionString = tenantService.GetConnectionString();
 
-            if (!string.IsNullOrEmpty(connectionString))
+            if (!string.IsNullOrEmpty(tenantConnectionString))
             {
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+                options.UseMySql(tenantConnectionString, ServerVersion.AutoDetect(tenantConnectionString));
             }
             // If no tenant is resolved, we might want to throw or allow a specific failure mode.
             // For now, EF will likely throw if initialized without a provider.
         });
+
+        builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<TenantDbContext>());
 
 
         builder.Services

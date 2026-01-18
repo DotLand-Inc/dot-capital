@@ -25,6 +25,8 @@ app.UseHealthChecks("/health");
 
 app.UseExceptionHandler(options => { });
 
+app.MapControllers();
+
 // YARP Reverse Proxy - handles ALL requests
 app.MapReverseProxy();
 

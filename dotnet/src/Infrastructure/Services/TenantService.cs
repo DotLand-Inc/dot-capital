@@ -67,7 +67,7 @@ public class TenantService : ITenantService
 
             var builder = new MySqlConnectionStringBuilder(systemConnectionString)
             {
-                Database = $"bigcapital_tenant_{organizationId}"
+                Database = $"dotcapital_tenant_{organizationId}"
             };
 
             return builder.ConnectionString;

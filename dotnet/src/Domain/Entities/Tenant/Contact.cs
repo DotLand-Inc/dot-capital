@@ -12,22 +12,22 @@ public class Contact : BaseEntity
     public string? ContactType { get; set; }
 
     [Column("BALANCE")]
-    public decimal Balance { get; set; }
+    public decimal? Balance { get; set; }
 
     [Column("CURRENCY_CODE")]
     public string? CurrencyCode { get; set; }
 
     [Column("OPENING_BALANCE")]
-    public decimal OpeningBalance { get; set; }
+    public decimal? OpeningBalance { get; set; }
 
     [Column("OPENING_BALANCE_AT")]
-    public DateTime OpeningBalanceAt { get; set; }
+    public DateTime? OpeningBalanceAt { get; set; }
 
     [Column("OPENING_BALANCE_EXCHANGE_RATE")]
-    public decimal OpeningBalanceExchangeRate { get; set; }
+    public decimal? OpeningBalanceExchangeRate { get; set; }
 
     [Column("OPENING_BALANCE_BRANCH_ID")]
-    public int OpeningBalanceBranchId { get; set; }
+    public int? OpeningBalanceBranchId { get; set; }
 
     [Column("SALUTATION")]
     public string? Salutation { get; set; }
@@ -108,11 +108,11 @@ public class Contact : BaseEntity
     public string? Note { get; set; }
 
     [Column("ACTIVE")]
-    public bool Active { get; set; }
+    public bool? Active { get; set; }
 
     [Column("CREATED_AT")]
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     [Column("UPDATED_AT")]
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }
