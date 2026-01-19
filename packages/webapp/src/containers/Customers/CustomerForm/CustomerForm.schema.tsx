@@ -11,6 +11,22 @@ const Schema = Yup.object().shape({
   first_name: Yup.string().trim(),
   last_name: Yup.string().trim(),
   company_name: Yup.string().trim(),
+
+  registration_number: Yup.string()
+    .trim()
+    .test(
+      'siret-length',
+      intl.get('registration_number_must_be_14_characters'),
+      (val) => !val || val.length === 14,
+    ),
+  taxe_number: Yup.string()
+    .trim()
+    .test(
+      'vat-length',
+      intl.get('taxe_number_must_be_13_characters'),
+      (val) => !val || val.length === 13,
+    ),
+
   display_name: Yup.string()
     .trim()
     .required()

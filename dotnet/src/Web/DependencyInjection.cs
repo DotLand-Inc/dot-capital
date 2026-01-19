@@ -44,4 +44,11 @@ public static class DependencyInjection
 
         builder.Services.AddEndpointsApiExplorer();
     }
+
+    public static WebApplication UseWebServices(this WebApplication app)
+    {
+        app.Services.MigrateAsync().Wait();
+
+        return app;
+    }
 }

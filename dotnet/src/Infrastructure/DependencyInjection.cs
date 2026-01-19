@@ -91,4 +91,27 @@ public static class DependencyInjection
 
         builder.Services.AddSingleton(TimeProvider.System);
     }
+
+    public static async Task MigrateAsync(this IServiceProvider provider)
+    {
+        using var scope = provider.CreateScope();
+        
+        var tenantService = scope.ServiceProvider.GetRequiredService<ITenantService>();
+        var db = scope.ServiceProvider.GetRequiredService<SystemDbContext>();
+        var configuration =  scope.ServiceProvider.GetRequiredService<IConfiguration>();
+        
+        await db.Database.MigrateAsync();
+
+        var tenants = db.Tenants.Select(e => e.OrganizationId).ToArray();
+
+        foreach (string? tenant in tenants)
+        {
+            if(string.IsNullOrEmpty(tenant)) continue;
+            var connectionString = tenantService.GetConnectionString(configuration, tenant);
+            if(string.IsNullOrEmpty(connectionString)) continue;
+            
+            var context = TenantDbContext.CreateDbContext(connectionString);
+            await context.Database.MigrateAsync();
+        }
+    }
 }

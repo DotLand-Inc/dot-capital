@@ -29,7 +29,7 @@ app.MapControllers();
 
 // YARP Reverse Proxy - handles ALL requests
 app.MapReverseProxy();
-
+app.UseWebServices();
 app.Run();
 
 public partial class Program { }

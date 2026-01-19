@@ -42,4 +42,6 @@ public class TenantDbContextFactory : IDesignTimeDbContextFactory<TenantDbContex
 
         return new TenantDbContext(optionsBuilder.Options);
     }
+    
+    
 }

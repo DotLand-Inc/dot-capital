@@ -13,7 +13,7 @@ public class TenantService : ITenantService
     private readonly IConfiguration _configuration;
 
     public TenantService(
-        IHttpContextAccessor httpContextAccessor, 
+        IHttpContextAccessor httpContextAccessor,
         SystemDbContext systemDbContext,
         IConfiguration configuration)
     {
@@ -30,7 +30,7 @@ public class TenantService : ITenantService
         if (context.Request.Headers.TryGetValue("organization-id", out var organizationIdValues))
         {
             var organizationId = organizationIdValues.ToString();
-            
+
             // Query System DB to find tenant (Sync)
             var tenant = _systemDbContext.Tenants
                 .AsNoTracking()
@@ -50,11 +50,11 @@ public class TenantService : ITenantService
         if (context.Request.Headers.TryGetValue("organization-id", out var organizationIdValues))
         {
             var organizationId = organizationIdValues.ToString();
-            
+
             // Verify tenant exists (optional but good for consistency) and get necessary details if logic requires more than just the ID
             // For now, based on instructions, we can assume the DB name follows the org ID.
             // But strictness suggests we should verify it exists in System DB first.
-            
+
             var tenantExists = _systemDbContext.Tenants
                 .AsNoTracking()
                 .Any(t => t.OrganizationId == organizationId);
@@ -74,5 +74,19 @@ public class TenantService : ITenantService
         }
 
         return null;
+    }
+
+    public string? GetConnectionString(IConfiguration configuration, string organizationId)
+    {
+        // Construct connection string
+        var tenantConnectionString = _configuration.GetConnectionString("TenantConnection");
+        if (string.IsNullOrEmpty(tenantConnectionString)) return null;
+
+        var builder = new MySqlConnectionStringBuilder(tenantConnectionString)
+        {
+            Database = $"dotcapital_tenant_{organizationId}"
+        };
+
+        return builder.ConnectionString;
     }
 }

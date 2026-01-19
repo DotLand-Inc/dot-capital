@@ -41,6 +41,12 @@ public class Contact : BaseEntity
     [Column("COMPANY_NAME")]
     public string? CompanyName { get; set; }
 
+    [Column("REGISTRATION_NUMBER")]
+    public string? RegistrationNumber { get; set; }
+
+    [Column("TAX_NUMBER")]
+    public string? TaxNumber { get; set; }
+
     [Column("DISPLAY_NAME")]
     public string? DisplayName { get; set; }
 

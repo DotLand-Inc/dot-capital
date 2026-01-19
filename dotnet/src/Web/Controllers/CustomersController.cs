@@ -24,18 +24,24 @@ public class CustomersController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CustomerDto>> CreateCustomer(CreateCustomerCommand command)
+    public async Task<ActionResult<CustomerDto>> CreateCustomer([FromBody] CreateCustomerDto dto)
     {
+        var command = new CreateCustomerCommand
+        {
+            Customer = dto
+        };
+
         return await Mediator.Send(command);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<CustomerDto>> EditCustomer(int id, EditCustomerCommand command)
+    public async Task<ActionResult<CustomerDto>> EditCustomer([FromRoute] int id, [FromBody] EditCustomerDto dto)
     {
-        if (id != command.Id)
+        var command = new EditCustomerCommand
         {
-            return BadRequest();
-        }
+            Id = id,
+            Customer = dto
+        };
 
         return await Mediator.Send(command);
     }
@@ -45,6 +51,6 @@ public class CustomersController : ApiControllerBase
     {
         await Mediator.Send(new DeleteCustomerCommand(id));
 
-        return NoContent();
+        return Ok();
     }
 }

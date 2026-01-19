@@ -58,6 +58,22 @@ export default function CustomerFormPrimarySection({}) {
         <FInputGroup name={'company_name'} />
       </FFormGroup>
 
+      <FFormGroup
+        name={'taxe_number'}
+        label={<T id={'taxe_number'} />}
+        inline={true}
+      >
+        <FInputGroup name={'taxe_number'} />
+      </FFormGroup>
+
+      <FFormGroup
+        name={'registration_number'}
+        label={<T id={'registration_number'} />}
+        inline={true}
+      >
+        <FInputGroup name={'registration_number'} />
+      </FFormGroup>
+
       {/*----------- Display Name -----------*/}
       <FFormGroup
         name={'display_name'}

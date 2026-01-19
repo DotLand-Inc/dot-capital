@@ -44,6 +44,12 @@ public class CustomerDto
     [JsonPropertyName("company_name")]
     public string? CompanyName { get; set; }
 
+    [JsonPropertyName("registration_number")]
+    public string? RegistrationNumber { get; set; }
+
+    [JsonPropertyName("taxe_number")]
+    public string? TaxNumber { get; set; }
+
     [JsonPropertyName("display_name")]
     public string? DisplayName { get; set; }
 

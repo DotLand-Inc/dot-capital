@@ -10,31 +10,23 @@ public record EditCustomerCommand : IRequest<CustomerDto>
     public EditCustomerDto Customer { get; init; } = null!;
 }
 
-public class EditCustomerCommandHandler : IRequestHandler<EditCustomerCommand, CustomerDto>
+public class EditCustomerCommandHandler(IApplicationDbContext context, IMapper mapper)
+    : IRequestHandler<EditCustomerCommand, CustomerDto>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-
-    public EditCustomerCommandHandler(IApplicationDbContext context, IMapper mapper)
-    {
-        _context = context;
-        _mapper = mapper;
-    }
-
     public async Task<CustomerDto> Handle(EditCustomerCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Contacts
-            .FindAsync(new object[] { request.Id }, cancellationToken);
+        var entity = await context.Contacts
+            .FindAsync([request.Id], cancellationToken);
 
         if (entity == null || entity.ContactService != "customer")
         {
             throw new NotFoundException(nameof(Contact), request.Id.ToString());
         }
 
-        _mapper.Map(request.Customer, entity);
+        mapper.Map(request.Customer, entity);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<CustomerDto>(entity);
+        return mapper.Map<CustomerDto>(entity);
     }
 }

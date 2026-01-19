@@ -4,10 +4,8 @@ using Dotland.DotCapital.WebApi.Application.Common.Interfaces;
 
 namespace Dotland.DotCapital.WebApi.Infrastructure.Data;
 
-public class TenantDbContext : DbContext, IApplicationDbContext
+public class TenantDbContext(DbContextOptions<TenantDbContext> options) : DbContext(options), IApplicationDbContext
 {
-    public TenantDbContext(DbContextOptions<TenantDbContext> options) : base(options) { }
-
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<AccountsTransaction> AccountsTransactions => Set<AccountsTransaction>();
     public DbSet<BankRule> BankRules => Set<BankRule>();
@@ -77,5 +75,14 @@ public class TenantDbContext : DbContext, IApplicationDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+    }
+    
+    public static TenantDbContext CreateDbContext(string connectionString)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
+        optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(
+            ServerVersion.AutoDetect(connectionString)));
+
+        return new TenantDbContext(optionsBuilder.Options);
     }
 }
