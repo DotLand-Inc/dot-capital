@@ -11,6 +11,15 @@ namespace Dotland.DotCapital.WebApi.Infrastructure.Data.Migrations.Tenant
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Drop legacy foreign key if it exists to allow column modification
+            migrationBuilder.Sql(@"
+                SET @fkCount := (SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_NAME = 'CONTACTS' AND CONSTRAINT_NAME = 'CONTACTS_OPENING_BALANCE_BRANCH_ID_FOREIGN' AND TABLE_SCHEMA = DATABASE());
+                SET @sql := IF(@fkCount > 0, 'ALTER TABLE CONTACTS DROP FOREIGN KEY CONTACTS_OPENING_BALANCE_BRANCH_ID_FOREIGN', 'SELECT 1');
+                PREPARE stmt FROM @sql;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+            ");
+
             migrationBuilder.AlterColumn<DateTime>(
                 name: "UPDATED_AT",
                 table: "CONTACTS",

@@ -80,8 +80,7 @@ public class TenantDbContext(DbContextOptions<TenantDbContext> options) : DbCont
     public static TenantDbContext CreateDbContext(string connectionString)
     {
         var optionsBuilder = new DbContextOptionsBuilder<TenantDbContext>();
-        optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(
-            ServerVersion.AutoDetect(connectionString)));
+        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
         return new TenantDbContext(optionsBuilder.Options);
     }

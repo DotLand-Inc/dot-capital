@@ -15,6 +15,10 @@ using Dotland.DotCapital.WebApi.Infrastructure.Identity;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+using System.Data;
+using System.Data.Common;
+
+
 public static class DependencyInjection
 {
     public static void AddInfrastructureServices(this IHostApplicationBuilder builder)
@@ -97,9 +101,11 @@ public static class DependencyInjection
         using var scope = provider.CreateScope();
         
         var tenantService = scope.ServiceProvider.GetRequiredService<ITenantService>();
+        // System Db
         var db = scope.ServiceProvider.GetRequiredService<SystemDbContext>();
         var configuration =  scope.ServiceProvider.GetRequiredService<IConfiguration>();
         
+        await BaselineMigration(db, "20260117140348_InitialCreate", "roles");
         await db.Database.MigrateAsync();
 
         var tenants = db.Tenants.Select(e => e.OrganizationId).ToArray();
@@ -111,7 +117,86 @@ public static class DependencyInjection
             if(string.IsNullOrEmpty(connectionString)) continue;
             
             var context = TenantDbContext.CreateDbContext(connectionString);
+            await BaselineMigration(context, "20260117140354_InitialCreate", "CONTACTS");
             await context.Database.MigrateAsync();
+        }
+    }
+
+    private static async Task BaselineMigration(DbContext context, string migrationId, string checkTableName)
+    {
+        var db = context.Database;
+        var connection = db.GetDbConnection();
+        var dbName = connection.Database;
+        const string historyTable = "__EFMigrationsHistory";
+        
+        // Ensure connection is open
+        bool originallyClosed = connection.State != ConnectionState.Open;
+        if (originallyClosed)
+        {
+            await connection.OpenAsync();
+        }
+
+        try 
+        {
+            using var cmd = connection.CreateCommand();
+
+            // 1. Check if the checkTable exists
+            cmd.CommandText = $@"
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = '{dbName}' 
+                AND table_name = '{checkTableName}';";
+            
+            var tableExists = Convert.ToInt64(await cmd.ExecuteScalarAsync()) > 0;
+
+            if (!tableExists) 
+            {
+                return;
+            }
+
+            // 2. Check if History table exists
+            cmd.CommandText = $@"
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = '{dbName}' 
+                AND table_name = '{historyTable}';";
+                
+            var historyExists = Convert.ToInt64(await cmd.ExecuteScalarAsync()) > 0;
+
+            if (!historyExists)
+            {
+                 cmd.CommandText = $@"
+                    CREATE TABLE IF NOT EXISTS `{historyTable}` (
+                        `MigrationId` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
+                        `ProductVersion` varchar(32) CHARACTER SET utf8mb4 NOT NULL,
+                        PRIMARY KEY (`MigrationId`)
+                    ) CHARACTER SET=utf8mb4;";
+                 await cmd.ExecuteNonQueryAsync();
+            }
+
+            // 3. Check if Migration is already recorded
+            cmd.CommandText = $@"
+                SELECT COUNT(*) 
+                FROM `{historyTable}` 
+                WHERE `MigrationId` = '{migrationId}';";
+            
+            var migrationRecorded = Convert.ToInt64(await cmd.ExecuteScalarAsync()) > 0;
+
+            if (!migrationRecorded)
+            {
+                Console.WriteLine($"[Migration] Baselining {migrationId} for existing database {dbName}...");
+                cmd.CommandText = $@"
+                    INSERT INTO `{historyTable}` (`MigrationId`, `ProductVersion`) 
+                    VALUES ('{migrationId}', '8.0.2');";
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+        finally
+        {
+            if (originallyClosed && connection.State == ConnectionState.Open)
+            {
+                await connection.CloseAsync();
+            }
         }
     }
 }
