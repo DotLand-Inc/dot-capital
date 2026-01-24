@@ -3,6 +3,7 @@ using Dotland.DotCapital.WebApi.Infrastructure.Data;
 using Dotland.DotCapital.WebApi.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Yarp.ReverseProxy.Transforms;
+using Dotland.DotCapital.WebApi.Web.Infrastructure.Converters;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,14 @@ public static class DependencyInjection
     public static void AddWebServices(this IHostApplicationBuilder builder)
     {
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new EmptyStringDecimalConverter());
+                options.JsonSerializerOptions.Converters.Add(new EmptyStringIntConverter());
+            });
+
+
 
         builder.Services.AddScoped<IUser, CurrentUser>();
         builder.Services.AddHttpContextAccessor();

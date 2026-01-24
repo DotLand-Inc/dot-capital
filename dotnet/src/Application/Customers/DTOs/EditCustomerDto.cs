@@ -1,11 +1,8 @@
-using Dotland.DotCapital.WebApi.Application.Customers.DTOs;
 using System.Text.Json.Serialization;
-using AutoMapper;
 using Dotland.DotCapital.WebApi.Domain.Entities.Tenant;
 
 public class EditCustomerDto
 {
-    public int Id { get; set; }
     public string? ContactType { get; set; }
     [JsonPropertyName("customer_type")]
     public string? CustomerType { get; set; }
@@ -92,6 +89,7 @@ public class EditCustomerDto
         public Mapping()
         {
             CreateMap<EditCustomerDto, Contact>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.TaxNumber, opt => opt.MapFrom(s => s.TaxeNumber));
         }
     }
