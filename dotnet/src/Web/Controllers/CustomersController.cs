@@ -14,13 +14,13 @@ public class CustomersController : ApiControllerBase
     [HttpGet]
     public async Task<ActionResult<GetCustomersResponse>> GetCustomers([FromQuery] GetCustomersQuery query)
     {
-        return await Mediator.Send(query);
+        return await Mediator.SendQueryAsync<GetCustomersQuery, GetCustomersResponse>(query);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
     {
-        return await Mediator.Send(new GetCustomerQuery(id));
+        return await Mediator.SendQueryAsync<GetCustomerQuery, CustomerDto>(new GetCustomerQuery(id));
     }
 
     [HttpPost]
@@ -31,7 +31,7 @@ public class CustomersController : ApiControllerBase
             Customer = dto
         };
 
-        return await Mediator.Send(command);
+        return await Mediator.SendCommandAsync<CreateCustomerCommand, CustomerDto>(command);
     }
 
     [HttpPut("{id}")]
@@ -43,13 +43,13 @@ public class CustomersController : ApiControllerBase
             Customer = dto
         };
 
-        return await Mediator.Send(command);
+        return await Mediator.SendCommandAsync<EditCustomerCommand, CustomerDto>(command);
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCustomer(int id)
     {
-        await Mediator.Send(new DeleteCustomerCommand(id));
+        await Mediator.SendCommandAsync(new DeleteCustomerCommand(id));
 
         return Ok();
     }

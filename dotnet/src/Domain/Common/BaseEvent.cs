@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Cortex.Mediator.Notifications;
 
 namespace Dotland.DotCapital.WebApi.Domain.Common;
 

@@ -9,7 +9,7 @@
     <PackageReference Include="Ardalis.GuardClauses" />
     <PackageReference Include="Riok.Mapperly" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-    <PackageReference Include="MediatR" />
+    <PackageReference Include="Cortex.Mediator" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

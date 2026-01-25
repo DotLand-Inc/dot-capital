@@ -4,22 +4,22 @@ using Dotland.DotCapital.WebApi.Domain.Entities.Tenant;
 
 namespace Dotland.DotCapital.WebApi.Application.Customers.Queries.GetCustomer;
 
-public record GetCustomerQuery(int Id) : IRequest<CustomerDto>;
+public record GetCustomerQuery(int Id) : IQuery<CustomerDto>;
 
 public class GetCustomerQueryHandler(IApplicationDbContext context, CustomerMapper mapper)
-    : IRequestHandler<GetCustomerQuery, CustomerDto>
+    : IQueryHandler<GetCustomerQuery, CustomerDto>
 {
-    public async Task<CustomerDto> Handle(GetCustomerQuery request, CancellationToken cancellationToken)
+    public async Task<CustomerDto> Handle(GetCustomerQuery query, CancellationToken cancellationToken)
     {
-        var query = context.Contacts
-            .Where(c => c.Id == request.Id && c.ContactService == "customer");
+        var dbQuery = context.Contacts
+            .Where(c => c.Id == query.Id && c.ContactService == "customer");
 
-        var entity = await mapper.ProjectToCustomerDto(query)
+        var entity = await mapper.ProjectToCustomerDto(dbQuery)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(Contact), request.Id.ToString());
+            throw new NotFoundException(nameof(Contact), query.Id.ToString());
         }
 
         return entity;

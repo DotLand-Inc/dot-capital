@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Dotland.DotCapital.WebApi.Application.Common.Behaviours;
+using Cortex.Mediator.DependencyInjection;
 using Dotland.DotCapital.WebApi.Application.Customers;
 using Microsoft.Extensions.Hosting;
 
@@ -14,13 +14,9 @@ public static class DependencyInjection
 
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        builder.Services.AddMediatR(cfg => {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            cfg.AddOpenRequestPreProcessor(typeof(LoggingBehaviour<>));
-            cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
-        });
+        builder.Services.AddCortexMediator(
+            builder.Configuration,
+            new[] { typeof(DependencyInjection) },
+            options => options.AddDefaultBehaviors());
     }
 }
