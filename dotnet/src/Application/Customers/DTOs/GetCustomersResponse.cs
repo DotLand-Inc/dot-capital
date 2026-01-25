@@ -2,33 +2,27 @@ using System.Text.Json.Serialization;
 
 namespace Dotland.DotCapital.WebApi.Application.Customers.DTOs;
 
-public class GetCustomersResponse
+public class GetCustomersResponse(IEnumerable<CustomerDto> customers, int total, int page, int pageSize)
 {
     [JsonPropertyName("customers")]
-    public IEnumerable<CustomerDto> Customers { get; set; }
+    public IEnumerable<CustomerDto> Customers { get; set; } = customers;
 
     [JsonPropertyName("pagination")]
-    public PaginationMeta Pagination { get; set; }
+    public PaginationMeta Pagination { get; set; } = new()
+    {
+        Total = total,
+        Page = page,
+        PageSize = pageSize
+    };
 
     [JsonPropertyName("filter_meta")]
-    public FilterMeta FilterMeta { get; set; }
-
-    public GetCustomersResponse(IEnumerable<CustomerDto> customers, int total, int page, int pageSize)
+    public FilterMeta FilterMeta { get; set; } = new()
     {
-        Customers = customers;
-        Pagination = new PaginationMeta
-        {
-            Total = total,
-            Page = page,
-            PageSize = pageSize
-        };
-        // Hardcoded for now based on user request "field_key": "created_at", "order": "desc"
-        FilterMeta = new FilterMeta
-        {
-            Order = "desc",
-            FieldKey = "created_at"
-        };
-    }
+        Order = "desc",
+        FieldKey = "created_at"
+    };
+
+    // Hardcoded for now based on user request "field_key": "created_at", "order": "desc"
 }
 
 public class PaginationMeta

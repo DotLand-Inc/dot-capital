@@ -1,7 +1,4 @@
-using Dotland.DotCapital.WebApi.Application.Customers.DTOs;
 using System.Text.Json.Serialization;
-using AutoMapper;
-using Dotland.DotCapital.WebApi.Domain.Entities.Tenant;
 
 public class CreateCustomerDto
 {
@@ -91,13 +88,4 @@ public class CreateCustomerDto
     public string? ShippingAddressState { get; set; }
     [JsonPropertyName("note")]
     public string? Note { get; set; }
-
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<CreateCustomerDto, Contact>()
-                .ForMember(d => d.TaxNumber, opt => opt.MapFrom(s => s.TaxeNumber));
-        }
-    }
 }

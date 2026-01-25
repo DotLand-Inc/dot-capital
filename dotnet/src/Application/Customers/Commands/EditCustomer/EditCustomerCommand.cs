@@ -10,7 +10,7 @@ public record EditCustomerCommand : IRequest<CustomerDto>
     public EditCustomerDto Customer { get; init; } = null!;
 }
 
-public class EditCustomerCommandHandler(IApplicationDbContext context, IMapper mapper)
+public class EditCustomerCommandHandler(IApplicationDbContext context, CustomerMapper mapper)
     : IRequestHandler<EditCustomerCommand, CustomerDto>
 {
     public async Task<CustomerDto> Handle(EditCustomerCommand request, CancellationToken cancellationToken)
@@ -23,10 +23,10 @@ public class EditCustomerCommandHandler(IApplicationDbContext context, IMapper m
             throw new NotFoundException(nameof(Contact), request.Id.ToString());
         }
 
-        mapper.Map(request.Customer, entity);
+        mapper.UpdateContact(request.Customer, entity);
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return mapper.Map<CustomerDto>(entity);
+        return mapper.ToCustomerDto(entity);
     }
 }

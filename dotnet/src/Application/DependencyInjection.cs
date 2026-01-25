@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Dotland.DotCapital.WebApi.Application.Common.Behaviours;
+using Dotland.DotCapital.WebApi.Application.Customers;
 using Microsoft.Extensions.Hosting;
 
 // ReSharper disable once CheckNamespace
@@ -9,8 +10,7 @@ public static class DependencyInjection
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddAutoMapper(cfg => 
-            cfg.AddMaps(Assembly.GetExecutingAssembly()));
+        builder.Services.AddSingleton<CustomerMapper>();
 
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

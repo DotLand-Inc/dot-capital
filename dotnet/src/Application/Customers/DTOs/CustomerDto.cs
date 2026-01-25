@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Dotland.DotCapital.WebApi.Domain.Entities.Tenant;
 
 namespace Dotland.DotCapital.WebApi.Application.Customers.DTOs;
 
@@ -148,14 +147,4 @@ public class CustomerDto
 
     [JsonPropertyName("formatted_customer_type")]
     public string FormattedCustomerType => ContactType == "individual" ? "customer.type.individual" : "customer.type.business";
-
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<Contact, CustomerDto>()
-                .ForMember(d => d.ClosingBalance, opt => opt.MapFrom(s => s.Balance))
-                .ForMember(d => d.LocalOpeningBalance, opt => opt.MapFrom(s => s.OpeningBalance * s.OpeningBalanceExchangeRate));
-        }
-    }
 }

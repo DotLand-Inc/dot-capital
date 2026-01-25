@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Dotland.DotCapital.WebApi.Domain.Entities.Tenant;
 
 public class EditCustomerDto
 {
@@ -83,14 +82,4 @@ public class EditCustomerDto
 
     [JsonPropertyName("active")]
     public bool Active { get; set; }
-
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<EditCustomerDto, Contact>()
-                .ForMember(d => d.Id, opt => opt.Ignore())
-                .ForMember(d => d.TaxNumber, opt => opt.MapFrom(s => s.TaxeNumber));
-        }
-    }
 }
